@@ -1,6 +1,7 @@
 node {
     stage 'Step 1: Test'
         build job: 'Service Testing/Unit testing/Notification Service Test', parameters: [[$class: 'StringParameterValue', name: 'Branch', value: '*/master']]
-   stage 'Step 2: Create Production Image'
-          build job:  'Service Deployment/Production Deployment/Create Production Images', parameters: [[$class: 'StringParameterValue', name: 'Repo', value: 'git@github-project-notification:UKForeignOffice/loi-notification-service.git'], [$class: 'StringParameterValue', name: 'Branch', value: 'master'], [$class: 'StringParameterValue', name: 'Tag', value: 'notification-service-prod'], [$class: 'StringParameterValue', name: 'Container', value: 'notification-service']]
-      }
+    stage 'Step 2: Deploy to PreProduction'
+        build job: 'Service Deployment/Deploy to PreProduction', parameters: [[$class: 'StringParameterValue', name: 'Repo', value: 'git@github-project-notification:UKForeignOffice/loi-notification-service.git'], [$class: 'StringParameterValue', name: 'Branch', value: 'Pre-Production'], [$class: 'StringParameterValue', name: 'Tag', value: 'notification-service-preprod'], [$class: 'StringParameterValue', name: 'Container', value: 'notification-service']]
+
+   }
