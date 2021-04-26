@@ -45,75 +45,165 @@ module.exports = function(router, notify, notifySettings) {
 
     router
         .post('/confirm-submission', function (req, res) {
-            // Application Emails when we have a reference
+
+            // ALL APPLICATIONS WITH A REFERENCE NUMBER
             if (req.body.user_ref !== "undefined" && req.body.user_ref !== null && req.body.user_ref !== "") {
-                
-                // standard service with reference
-                if (req.body.service_type == 1) { 
-                    notifyClient
-                        .sendEmail(notifySettings.templates.emailTemplateSubmissionStandardUserRef, req.body.to, {
-                            personalisation: {
-                                'application_reference': req.body.application_reference,
-                                'email_address': req.body.to,
-                                'customerRef': req.body.user_ref
-                            },
-                            reference: "application submission standard without user ref"
-                        })
-                        .then(response => {
-                            console.info('Sending standard submission confirmation email with user reference')
-                            return res.json('Standard submission confirmation (with reference) sent');
-                        })
-                        .catch(err => console.error(err))
-                // premium and drop-off service with reference
-                } else if (req.body.service_type == 2 || req.body.service_type == 3) { 
-                    notifyClient
-                        .sendEmail(notifySettings.templates.emailTemplateSubmissionPremiumUserRef, req.body.to, {
-                            personalisation: {
-                                'application_reference': req.body.application_reference,
-                                'customerRef': req.body.user_ref
-                            },
-                            reference: "application submission premium without user ref"
-                        })
-                        .then(response => {
-                            console.info('Sending premium submission confirmation email with user reference')
-                            return res.json('Premium submission confirmation (with reference) sent')
-                        })
-                        .catch(err => console.error(err))
+
+                switch (req.body.service_type) {
+
+                    // STANDARD SERVICE
+                    case 1:
+                        // ROYAL MAIL
+                        if (req.body.user_ref !== "undefined" && req.body.send_information !== null && req.body.send_information[0][0].includes('Royal Mail tracked delivery')) {
+                            notifyClient
+                                .sendEmail(notifySettings.templates.emailTemplateSubmissionStandardCustRefRoyalMail, req.body.to, {
+                                    personalisation: {
+                                        'application_reference': req.body.application_reference,
+                                        'email_address': req.body.to,
+                                        'customerRef': req.body.user_ref
+                                    },
+                                    reference: "submission - standard - customer reference - royal mail"
+                                })
+                                .then(response => {
+                                    console.info('sending submission email (standard - customer reference - royal mail)')
+                                    return res.json('submission email (standard - customer reference - royal mail) sent');
+                                })
+                                .catch(err => console.error(err))
+                        }
+
+                        // COURIER
+                        else if (req.body.user_ref !== "undefined" && req.body.send_information !== null && req.body.send_information[0][0].includes('Courier recorded delivery')) {
+                            notifyClient
+                                .sendEmail(notifySettings.templates.emailTemplateSubmissionStandardCustRefCourier, req.body.to, {
+                                    personalisation: {
+                                        'application_reference': req.body.application_reference,
+                                        'email_address': req.body.to,
+                                        'customerRef': req.body.user_ref
+                                    },
+                                    reference: "submission - standard - customer reference - courier"
+                                })
+                                .then(response => {
+                                    console.info('sending submission email (standard - customer reference - courier)')
+                                    return res.json('submission email (standard - customer reference - courier) sent');
+                                })
+                                .catch(err => console.error(err))
+                        } else {
+                            console.info('NO EMAIL SENT - Could not determine if application was postal or courier.')
+                        }
+                        break
+                    // PREMIUM SERVICE
+                    case 2:
+                        notifyClient
+                            .sendEmail(notifySettings.templates.emailTemplateSubmissionPremiumCustRef, req.body.to, {
+                                personalisation: {
+                                    'application_reference': req.body.application_reference,
+                                    'customerRef': req.body.user_ref
+                                },
+                                reference: "submission - premium - customer reference"
+                            })
+                            .then(response => {
+                                console.info('sending submission email (premium - customer reference)')
+                                return res.json('submission email (premium - customer reference) sent')
+                            })
+                            .catch(err => console.error(err))
+                        break
+                    // DROP-OFF SERVICE
+                    case 3:
+                        notifyClient
+                            .sendEmail(notifySettings.templates.emailTemplateSubmissionDropOffCustRef, req.body.to, {
+                                personalisation: {
+                                    'application_reference': req.body.application_reference,
+                                    'customerRef': req.body.user_ref
+                                },
+                                reference: "submission - drop-off - customer reference"
+                            })
+                            .then(response => {
+                                console.info('sending submission email (drop-off - customer reference)')
+                                return res.json('submission email (drop-off - customer reference) sent')
+                            })
+                            .catch(err => console.error(err))
+                        break
                 }
 
-            // Application Email with no reference
             } else {
-                // standard service with no reference
-                if (req.body.service_type == 1) { 
-                    notifyClient
-                        .sendEmail(notifySettings.templates.emailTemplateSubmissionStandardNoUserRef, req.body.to, {
-                            personalisation: {
-                                'application_reference': req.body.application_reference,
-                                'email_address': req.body.to
-                            },
-                            reference: "application submission standard with user ref"
-                        })
-                        .then(response => {
-                            console.info('Sending standard submission confirmation email')
-                            return res.json('Standard submission confirmation (without reference) sent');
+
+                // ALL APPLICATIONS WITHOUT A REFERENCE NUMBER
+                switch (req.body.service_type) {
+                    // STANDARD SERVICE
+                    case 1:
+                        console.log(req.body.send_information[0])
+                        // ROYAL MAIL
+                        if (req.body.user_ref !== "undefined" && req.body.send_information !== null && req.body.send_information[0][0].includes('Royal Mail tracked delivery')) {
+                            notifyClient
+                                .sendEmail(notifySettings.templates.emailTemplateSubmissionStandardRoyalMail, req.body.to, {
+                                    personalisation: {
+                                        'application_reference': req.body.application_reference,
+                                        'email_address': req.body.to,
+                                        'customerRef': req.body.user_ref
+                                    },
+                                    reference: "submission - standard - royal mail"
+                                })
+                                .then(response => {
+                                    console.info('sending submission email (standard - royal mail)')
+                                    return res.json('submission email (standard - royal mail) sent');
+                                })
+                                .catch(err => console.error(err))
+                        }
+
+                        // COURIER
+                        else if (req.body.user_ref !== "undefined" && req.body.send_information !== null && req.body.send_information[0][0].includes('Courier recorded delivery')) {
+                            notifyClient
+                                .sendEmail(notifySettings.templates.emailTemplateSubmissionStandardCourier, req.body.to, {
+                                    personalisation: {
+                                        'application_reference': req.body.application_reference,
+                                        'email_address': req.body.to,
+                                        'customerRef': req.body.user_ref
+                                    },
+                                    reference: "submission - standard - courier"
+                                })
+                                .then(response => {
+                                    console.info('sending submission email (standard - courier)')
+                                    return res.json('submission email (standard - courier) sent');
+                                })
+                                .catch(err => console.error(err))
+                        } else {
+                            console.info('NO EMAIL SENT - Could not determine if application was postal or courier.')
+                        }
+                        break
+                    // PREMIUM SERVICE
+                    case 2:
+                        notifyClient
+                            .sendEmail(notifySettings.templates.emailTemplateSubmissionPremium, req.body.to, {
+                                personalisation: {
+                                    'application_reference': req.body.application_reference
+                                },
+                                reference: "submission - premium"
                             })
-                        .catch(err => console.error(err))
-                // premium and drop-off service with no reference
-                } else if (req.body.service_type == 2 || req.body.service_type == 3) { 
-                    notifyClient
-                        .sendEmail(notifySettings.templates.emailTemplateSubmissionPremiumNoUserRef, req.body.to, {
-                            personalisation: {
-                                'application_reference': req.body.application_reference
-                            },
-                            reference: "application submission premium with user ref"
-                        })
-                        .then(response => {
-                            console.log('Sending premium submission confirmation email')
-                            return res.json('Premium submission confirmation (without reference) sent');
-                            }
-                        )
-                        .catch(err => console.error(err))
+                            .then(response => {
+                                console.info('sending submission email (premium)')
+                                return res.json('submission email (premium) sent');
+                                }
+                            )
+                            .catch(err => console.error(err))
+                        break
+                    // DROP-OFF SERVICE
+                    case 3:
+                        notifyClient
+                            .sendEmail(notifySettings.templates.emailTemplateSubmissionDropOff, req.body.to, {
+                                personalisation: {
+                                    'application_reference': req.body.application_reference
+                                },
+                                reference: "submission - drop-off"
+                            })
+                            .then(response => {
+                                console.info('sending submission email (drop-off)')
+                                return res.json('submission email (drop-off) sent');
+                                }
+                            )
+                            .catch(err => console.error(err))
+                        break
                 }
+
             }
         });
 
