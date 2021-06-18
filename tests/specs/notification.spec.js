@@ -1,14 +1,31 @@
-var baseUrl = 'http://localhost:6000/api/notification';
-var server = request.agent(baseUrl);
+var expect  = require("chai").expect;
+var request = require("request");
 
-describe('Work with Notifications', function () {
-    it('runs health check', function (done) {
-        request(baseUrl).get('/healthcheck')
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err);
-                expect(res.body.message).to.equal('Notification Service is running');
+before("Run Server", function (done) {
+    server = require("../../server").getApp;
+    done();
+});
+
+describe("Healthcheck is working", function() {
+
+    describe("GET /healthcheck", function() {
+
+        var url = "http://localhost:1234/api/notification/healthcheck";
+
+        it("returns status 200", function(done) {
+            request(url, function(error, response, body) {
+                expect(response.statusCode).to.equal(200);
                 done();
             });
+        });
+
+        it("JSON body is correct", function(done) {
+            request(url, function(error, response, body) {
+                expect(body).to.contain('"message":"Notification Service is running"')
+                done();
+            });
+        });
+
     });
+
 });
