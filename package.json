@@ -18,6 +18,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "start": "node server.js 1234",
     "lint": "jshint --reporter checkstyle . > linting.xml",
     "local-lint": "jshint .",
     "test": "node_modules/mocha/bin/mocha --timeout 10000 --recursive tests/ --exit",
