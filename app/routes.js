@@ -133,7 +133,8 @@ module.exports = function(router, notify, notifySettings) {
                                 personalisation: {
                                     application_reference,
                                     first_name: send_information.first_name,
-                                    last_name: send_information.last_name
+                                    last_name: send_information.last_name,
+                                    app_url: send_information.app_url,
                                 },
                                 reference: `submission - e-app - ${application_reference}`
                             })
