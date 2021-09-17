@@ -131,7 +131,6 @@ module.exports = function(router, notify, notifySettings) {
                 switch (req.body.service_type) {
                     // STANDARD SERVICE
                     case 1:
-                        console.log(req.body.send_information[0])
                         // ROYAL MAIL
                         if (req.body.user_ref !== "undefined" && req.body.send_information !== null && req.body.send_information[0][0].includes('Royal Mail tracked delivery')) {
                             notifyClient
