@@ -7,5 +7,5 @@ FROM node:12-alpine3.14 AS run
 WORKDIR /opt/app
 COPY --from=build /opt/app ./
 COPY . ./
-EXPOSE 3000
+EXPOSE 3002
 CMD ["node", "server", "3002"]
