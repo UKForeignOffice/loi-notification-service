@@ -123,27 +123,6 @@ module.exports = function(router, notify, notifySettings) {
                             })
                             .catch(err => console.error(err))
                         break
-                    // E-APP SERVICE
-                    case 4:
-                        const {application_reference, send_information, to} = req.body;
-                        const { emailTemplateSubmissionEApp } = notifySettings.templates;
-
-                        notifyClient
-                            .sendEmail(emailTemplateSubmissionEApp, to, {
-                                personalisation: {
-                                    application_reference,
-                                    first_name: send_information.first_name,
-                                    last_name: send_information.last_name,
-                                    app_url: send_information.app_url,
-                                },
-                                reference: `submission - e-app - ${application_reference}`
-                            })
-                            .then(() => {
-                                console.info(`sending submission email (e-app - ${application_reference})`);
-                                return res.json(`submission email (e-app - ${application_reference}) sent`);
-                            })
-                            .catch(err => console.error(err))
-                        break
                 }
 
             } else {
@@ -224,6 +203,28 @@ module.exports = function(router, notify, notifySettings) {
                         break
                 }
 
+            }
+
+            if (req.body.service_type === 4) {
+                // E-APP SERVICE
+                const {application_reference, send_information, to} = req.body;
+                const { emailTemplateSubmissionEApp } = notifySettings.templates;
+
+                notifyClient
+                    .sendEmail(emailTemplateSubmissionEApp, to, {
+                        personalisation: {
+                            application_reference,
+                            first_name: send_information.first_name,
+                            last_name: send_information.last_name,
+                            app_url: send_information.app_url,
+                        },
+                        reference: `submission - e-app - ${application_reference}`
+                    })
+                    .then(() => {
+                        console.info(`sending submission email (e-app - ${application_reference})`);
+                        return res.json(`submission email (e-app - ${application_reference}) sent`);
+                    })
+                    .catch(err => console.error(err))
             }
         });
 
