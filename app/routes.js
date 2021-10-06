@@ -216,7 +216,7 @@ module.exports = function(router, notify, notifySettings) {
                             application_reference,
                             first_name: send_information.first_name,
                             last_name: send_information.last_name,
-                            app_url: send_information.app_url,
+                            app_url: `${notifySettings.urls.applicationServiceURL}/open-eapp/${application_reference}`,
                         },
                         reference: `submission - e-app - ${application_reference}`
                     })
