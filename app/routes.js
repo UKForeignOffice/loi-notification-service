@@ -251,6 +251,53 @@ module.exports = function(router, notify, notifySettings) {
         });
 
     // =====================================
+    // REQUEST PREMIUM ACCESS
+    // =====================================
+    router
+        .post('/request-premium-access', function (req, res) {
+            notifyClient
+                .sendEmail(notifySettings.templates.emailTemplateRequestPremiumAccess, notifySettings.configs.request_premium_service_mailbox, {
+                    personalisation: {
+                        'userEmail': req.body.userEmail,
+                        'companyName': req.body.companyName,
+                        'companiesHouseNumber': req.body.companiesHouseNumber,
+                        'businessArea': req.body.businessArea,
+                        'justification': req.body.justification,
+                        'token': req.body.token,
+                        'url': notifySettings.urls.userServiceURL
+                    },
+                    reference: "apply for premium access"
+                })
+                .then(response => {
+                    console.info('Sending email to request premium access')
+                    return res.json('Premium access request email has been sent');
+                })
+                .catch(err => console.error(err))
+        });
+
+    // =====================================
+    // PREMIUM SERVICE DECISION
+    // =====================================
+    router
+        .post('/premium-service-decision', function (req, res) {
+
+          notifyClient
+                    .sendEmail(notifySettings.templates.emailTemplatePremiumAccessDecision, req.body.to, {
+                        personalisation: {
+                            'approve' : (req.body.decision === 'approve') ? 'yes' : 'no',
+                            'reject' :  (req.body.decision === 'reject') ? 'yes' : 'no',
+                        },
+                        reference: "premium service access decision"
+                    })
+                    .then(response => {
+                        console.info('Sending premium service access decision email')
+                        return res.json('Premium service access decision email has been sent');
+                    })
+                    .catch(err => console.error(err))
+
+        });
+
+    // =====================================
     // PASSWORD UPDATED
     // =====================================
     router
