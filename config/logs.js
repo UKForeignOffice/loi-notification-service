@@ -1,45 +1,30 @@
-var winston = require('winston');
-var logger = new winston.Logger({
-    transports: [
-        /*Log info to console*/
-        new (winston.transports.Console)({
-            timestamp: function () {
-                return getTimeStamp();
-            },
-            formatter: function (options) {
-                return '' + (undefined !== options.message ? options.message : '') +
-                    (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '' );
-            },
-            name: 'info-console',
-            level: 'info',
-            handleExceptions: true,
-            humanReadableUnhandledException: true
+const { createLogger, format, transports } = require('winston');
+const { combine, timestamp, printf } = format;
+
+const customFormat = printf(({ level, message, timestamp }) => {
+    return `${timestamp} ${level}: ${message}`;
+});
+
+const logger = createLogger({
+    format: combine(
+        timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss'
         }),
-        /*Log errors to console */
-        new (winston.transports.Console)({
-            timestamp: function () {
-                return getTimeStamp();
-            },
-            formatter: function (options) {
-                return '' + (undefined !== options.message ? options.message : '') +
-                    (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '' );
-            },
+        customFormat
+    ),
+    transports: [
+        // Log errors to console
+        new transports.Console({
             name: 'error-console',
             level: 'error',
-            handleExceptions: true,
-            humanReadableUnhandledException: true
+            handleExceptions: true
         })
     ]
 });
 
-// Overwrite some of the build-in console functions
-console.error = logger.error;
-console.log = logger.info;
-console.info = logger.info;
-console.debug = logger.debug;
-console.warn = logger.warn;
-
-function getTimeStamp() {
-    var date = new Date();
-    return date.toISOString();
-}
+// Overwrite some built-in console functions
+console.error = (...args) => logger.error(...args);
+console.log = (...args) => logger.info(...args);
+console.info = (...args) => logger.info(...args);
+console.debug = (...args) => logger.debug(...args);
+console.warn = (...args) => logger.warn(...args);
