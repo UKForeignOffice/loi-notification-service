@@ -342,6 +342,44 @@ module.exports = function(router, notify, notifySettings) {
 
 
     // =====================================
+    // ONE TIME PASSCODE EMAIL
+    // =====================================
+    router
+        .post('/one_time_passcode_email', function (req, res) {
+            notifyClient
+                .sendEmail(notifySettings.templates.emailTemplateOneTimePasscode, req.body.to, {
+                    personalisation: {
+                        'one_time_passcode': req.body.oneTimePasscode
+                    },
+                    reference: "one time passcode"
+                })
+                .then(response => {
+                    console.log('Sending one time passcode email')
+                    return res.json('One time passcode email sent');
+                })
+                .catch(err => console.error(err))
+        });
+
+    // =====================================
+    // ONE TIME PASSCODE SMS
+    // =====================================
+    router
+        .post('/one_time_passcode_sms', function (req, res) {
+            notifyClient
+                .sendSms(notifySettings.templates.textMessageOneTimePasscode, req.body.to, {
+                    personalisation: {
+                        'one_time_passcode': req.body.oneTimePasscode
+                    },
+                    reference: "one time passcode"
+                })
+                .then(response => {
+                    console.log('Sending one time passcode sms')
+                    return res.json('One time passcode sms sent');
+                })
+                .catch(err => console.error(err))
+        });
+
+    // =====================================
     // ACCOUNT EXPIRY WARNING
     // =====================================
     router
