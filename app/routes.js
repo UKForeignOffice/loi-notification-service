@@ -1,8 +1,3 @@
-/**
- * Created by skaifem on 25/11/2015.
- */
-
-
 module.exports = function(router, notify, notifySettings) {
 
     var notifyClient = new notify(notifySettings.configs.notify_api_key)
@@ -251,12 +246,12 @@ module.exports = function(router, notify, notifySettings) {
         });
 
     // =====================================
-    // REQUEST PREMIUM ACCESS
+    // REQUEST BUSINESS ACCESS
     // =====================================
     router
-        .post('/request-premium-access', function (req, res) {
+        .post('/request-business-access', function (req, res) {
             notifyClient
-                .sendEmail(notifySettings.templates.emailTemplateRequestPremiumAccess, notifySettings.configs.request_premium_service_mailbox, {
+                .sendEmail(notifySettings.templates.emailTemplateRequestBusinessAccess, notifySettings.configs.request_business_service_mailbox, {
                     personalisation: {
                         'userEmail': req.body.userEmail,
                         'companyName': req.body.companyName,
@@ -266,32 +261,32 @@ module.exports = function(router, notify, notifySettings) {
                         'token': req.body.token,
                         'url': notifySettings.urls.userServiceURL
                     },
-                    reference: "apply for premium access"
+                    reference: "apply for business access"
                 })
                 .then(response => {
-                    console.info('Sending email to request premium access')
-                    return res.json('Premium access request email has been sent');
+                    console.info('Sending email to request business access')
+                    return res.json('Business access request email has been sent');
                 })
                 .catch(err => console.error(err))
         });
 
     // =====================================
-    // PREMIUM SERVICE DECISION
+    // BUSINESS SERVICE DECISION
     // =====================================
     router
-        .post('/premium-service-decision', function (req, res) {
+        .post('/business-service-decision', function (req, res) {
 
           notifyClient
-                    .sendEmail(notifySettings.templates.emailTemplatePremiumAccessDecision, req.body.to, {
+                    .sendEmail(notifySettings.templates.emailTemplateBusinessAccessDecision, req.body.to, {
                         personalisation: {
                             'approve' : (req.body.decision === 'approve') ? 'yes' : 'no',
                             'reject' :  (req.body.decision === 'reject') ? 'yes' : 'no',
                         },
-                        reference: "premium service access decision"
+                        reference: "business service access decision"
                     })
                     .then(response => {
-                        console.info('Sending premium service access decision email')
-                        return res.json('Premium service access decision email has been sent');
+                        console.info('Sending business service access decision email')
+                        return res.json('Business service access decision email has been sent');
                     })
                     .catch(err => console.error(err))
 
