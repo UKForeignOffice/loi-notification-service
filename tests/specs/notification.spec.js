@@ -1,31 +1,36 @@
-var expect  = require("chai").expect;
-var request = require("request");
+const expect = require("chai").expect;
+const axios = require("axios");
 
 before("Run Server", function (done) {
-    server = require("../../server").getApp;
+    let server = require("../../server").getApp;
     done();
 });
 
 describe("Healthcheck is working", function() {
-
     describe("GET /healthcheck", function() {
-
-        var url = "http://localhost:1234/api/notification/healthcheck";
+        const url = "http://localhost:1234/api/notification/healthcheck";
 
         it("returns status 200", function(done) {
-            request(url, function(error, response, body) {
-                expect(response.statusCode).to.equal(200);
-                done();
-            });
+            axios.get(url)
+                .then(function(response) {
+                    expect(response.status).to.equal(200);
+                    done();
+                })
+                .catch(function(error) {
+                    done(error);
+                });
         });
 
         it("JSON body is correct", function(done) {
-            request(url, function(error, response, body) {
-                expect(body).to.contain('"message":"Notification Service is running"')
-                done();
-            });
+            axios.get(url)
+                .then(function(response) {
+                    // Directly checking the property of the response object
+                    expect(response.data).to.have.property('message', 'Notification Service is running');
+                    done();
+                })
+                .catch(function(error) {
+                    done(error);
+                });
         });
-
     });
-
 });

@@ -2,10 +2,11 @@ const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, printf } = format;
 
 const customFormat = printf(({ level, message, timestamp }) => {
-    return `${timestamp} ${level}: ${message}`;
+    return `${level}: ${message}`;
 });
 
 const logger = createLogger({
+    level: 'info',
     format: combine(
         timestamp({
             format: 'YYYY-MM-DD HH:mm:ss'
@@ -13,16 +14,30 @@ const logger = createLogger({
         customFormat
     ),
     transports: [
-        // Log errors to console
         new transports.Console({
-            name: 'error-console',
-            level: 'error',
-            handleExceptions: true
+            handleExceptions: true,
+            level: 'info',
+        })
+    ],
+    exceptionHandlers: [
+        new transports.Console({
+            format: combine(
+                format.colorize(),
+                customFormat
+            )
         })
     ]
 });
 
-// Overwrite some built-in console functions
+logger.exceptions.handle(
+    new transports.Console({
+        format: combine(
+            format.colorize(),
+            customFormat
+        )
+    })
+);
+
 console.error = (...args) => logger.error(...args);
 console.log = (...args) => logger.info(...args);
 console.info = (...args) => logger.info(...args);
