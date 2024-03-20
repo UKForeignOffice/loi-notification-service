@@ -36,6 +36,11 @@ app.use('/api/notification', router); //prefix all requests with 'api'
 // =====================================
 // LAUNCH
 // =====================================
-app.listen(port);
-console.log('Notification-service running on port: ' + port);
+app.listen(port, (err) => {
+    if (err) {
+        return console.error(`Failed to start server on port ${port}`, err);
+    }
+    console.log(`Notification-service running on port: ${port}`);
+});
+
 module.exports.getApp = app;
