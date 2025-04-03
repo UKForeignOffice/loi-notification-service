@@ -5,7 +5,7 @@
 // =====================================
 // SETUP
 // =====================================
-var port = (process.argv[2] && !isNaN(process.argv[2])  ? process.argv[2] : (process.env.PORT || 1234));
+var port = (process.argv[2] && !isNaN(process.argv[2])  ? process.argv[2] : (process.env.PORT || 3000));
 var express = require('express');
 
 var app = express();
