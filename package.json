@@ -4,7 +4,7 @@
   "description": "Email notification microservice",
   "author": "Mike Skaife <mike.skaife@informed.com>",
   "dependencies": {
-    "axios": "^1.7.9",
+    "axios": "^1.9.0",
     "body-parser": "1.20.3",
     "chai": "^4.3.8",
     "dotenv": "^16.4.7",
