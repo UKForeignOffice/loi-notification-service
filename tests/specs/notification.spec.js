@@ -12,7 +12,7 @@ describe('Healthcheck is working', () => {
 
     it('returns status 200', async () => {
       const response = await axios.get(url)
-      expect(response.status).toBe(500)
+      expect(response.status).toBe(200)
     })
 
     it('JSON body is correct', async () => {
