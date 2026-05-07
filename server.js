@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser'
 import express from 'express'
+const express2 = require('express')
 import notifyClient from 'notifications-node-client'
 import { routes } from './app/routes.js'
 import { config } from './config/common.js'
