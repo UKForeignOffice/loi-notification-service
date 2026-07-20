@@ -12,7 +12,7 @@
     "test": "vitest run --coverage --reporter=tree"
   },
   "dependencies": {
-    "axios": "^1.17.0",
+    "axios": "^1.18.1",
     "body-parser": "2.2.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
